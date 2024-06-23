@@ -1,31 +1,16 @@
-package com.ap.entity;
+package com.ap.dtos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-
-@Entity
-@Table(name = "user_details")
-public class User {
+public class UserResponse {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String userId;
 	private String name;
-	
-	@NotBlank
-	@Column(name="user_email", unique =true)
 	private String email;
 	private String password;
 	private String gender;
 	private String about;
 	private String userImage;
 	
-	public User() {
+	public UserResponse() {
 		// 
 	}
 
@@ -87,18 +72,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password + ", gender="
-				+ gender + ", about=" + about + ", userImage=" + userImage + "]";
+		return "UserResponse [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password
+				+ ", gender=" + gender + ", about=" + about + ", userImage=" + userImage + "]";
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 
