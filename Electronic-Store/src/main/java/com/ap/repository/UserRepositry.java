@@ -1,5 +1,10 @@
 package com.ap.repository;
 
-public interface UserRepositry {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ap.entity.User;
+
+public interface UserRepositry extends JpaRepository<User, String>{
+	
 
 }
