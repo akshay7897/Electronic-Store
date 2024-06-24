@@ -23,7 +23,7 @@ public interface UserService {
 	UserResponse getUserByID(String userId);
 	
 	//get user by email
-	UserResponse getUserByEmail(String Email);
+	UserResponse getUserByEmail(String email);
 	
 	// search user
 	List<UserResponse> searchUsers(String keywords);
