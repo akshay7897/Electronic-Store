@@ -49,18 +49,24 @@ public class UserServiceImpl implements UserService {
 		User updatedUser =null;
 		User user = userRepositry.findById(userId).orElseThrow(()->new RuntimeException("User not found with given id ."));
 		
-		if(null!=userRequest.getName() && " ".equals(userRequest.getName()))
+		if(null!=userRequest.getName() && !" ".equals(userRequest.getName())) {
 			user.setName(userRequest.getName());
-		if(null!=userRequest.getGender() && " ".equals(userRequest.getGender()))
+		}
+		if(null!=userRequest.getGender() && !" ".equals(userRequest.getGender())) {
 			user.setGender(userRequest.getGender());
-		if(null!=userRequest.getAbout() && " ".equals(userRequest.getAbout()))
+		}
+		if(null!=userRequest.getAbout() && !" ".equals(userRequest.getAbout())) {
 			user.setAbout(userRequest.getAbout());
-		if(null!=userRequest.getEmail() && " ".equals(userRequest.getEmail()))
+		}
+		if(null!=userRequest.getEmail() && !" ".equals(userRequest.getEmail())) {
 			user.setEmail(userRequest.getEmail());
-		if(null!=userRequest.getPassword() && " ".equals(userRequest.getPassword()))
+		}
+		if(null!=userRequest.getPassword() && !" ".equals(userRequest.getPassword())) {
 			user.setPassword(userRequest.getPassword());
-		if(null!=userRequest.getUserImage() && " ".equals(userRequest.getUserImage()))
+		}
+		if(null!=userRequest.getUserImage() && !" ".equals(userRequest.getUserImage())) {
 			user.setUserImage(userRequest.getUserImage());
+		}
 	try {
 		 updatedUser = userRepositry.save(user);
 	}catch (Exception e) {

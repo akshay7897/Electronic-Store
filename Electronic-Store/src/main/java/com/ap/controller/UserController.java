@@ -46,11 +46,11 @@ public class UserController {
 	
 	//Delete
 	@DeleteMapping("/delete/{userId}")
-	public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") String userId){
+	public ResponseEntity<String> deleteUser(@PathVariable(name = "userId") String userId){
 		
 		Boolean deleteUser = userService.deleteUser(userId);
 		if(deleteUser) {
-			return (ResponseEntity<?>) ResponseEntity.ok();
+			return new ResponseEntity<>("User Deleted", HttpStatus.OK);
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ public class UserController {
 		return new ResponseEntity<>(searchUsers,HttpStatus.OK);
 	}
 
-	@GetMapping("/getuserbyemail")
+	@GetMapping("/getuserbyemail/{email}")
 	public ResponseEntity<UserResponse> getUserByEmail(@PathVariable(name = "email") String email){
 		
 		UserResponse userByEmail = userService.getUserByEmail(email);
