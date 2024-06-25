@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ap.dtos.ApiResponseMessage;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
 import com.ap.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -30,7 +33,7 @@ public class UserController {
 	
 	// create
 	@PostMapping(value = "/create")
-	public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request){
+	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request){
 		
 		UserResponse createdUser = userService.createUser(request);
 		return new ResponseEntity<>(createdUser,HttpStatus.CREATED);
@@ -38,7 +41,7 @@ public class UserController {
 	
 	//update
 	@PutMapping(value = "/update/{userId}")
-	public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest request,@PathVariable(name="userId") String userId){
+	public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest request,@PathVariable(name="userId") String userId){
 		
 		UserResponse updatedUser = userService.updateUser(request, userId);
 		return new ResponseEntity<>(updatedUser,HttpStatus.CREATED);
@@ -46,11 +49,11 @@ public class UserController {
 	
 	//Delete
 	@DeleteMapping("/delete/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable(name = "userId") String userId){
+	public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable(name = "userId") String userId){
 		
 		Boolean deleteUser = userService.deleteUser(userId);
 		if(deleteUser) {
-			return new ResponseEntity<>("User Deleted", HttpStatus.OK);
+			return new ResponseEntity<>(new ApiResponseMessage("User Deleted", Boolean.TRUE), HttpStatus.OK);
 		}
 		return null;
 	}

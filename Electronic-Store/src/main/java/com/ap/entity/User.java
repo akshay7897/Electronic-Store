@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "user_details")
@@ -11,12 +12,23 @@ public class User {
 	
 	@Id
 	private String userId;
+	
+	@NotBlank(message = "Name Should not be null")
 	private String name;
+	
 	@Column(name="user_email", unique =true)
+	@NotBlank(message = "Email should be unique or not null")
 	private String email;
+	
+	@NotBlank(message = "Password should not be null")
 	private String password;
+	
+	@NotBlank(message = "Gender should not null")
 	private String gender;
+	
+	@NotBlank(message = "About should not null")
 	private String about;
+	
 	private String userImage;
 	
 	public User() {
