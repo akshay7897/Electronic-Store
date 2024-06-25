@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,14 +28,11 @@ public class GlobalExceptionHandler {
 		
 	}
 	
-	
-
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception){
 		
 		 List<ObjectError> allErrors = exception.getBindingResult().getAllErrors();
 		 Map<String, Object> message=new HashMap<>();
-		 
 		 allErrors.stream().forEach(obj->{
 			 String errorMessage = obj.getDefaultMessage();
 			 String field = ((FieldError)obj).getField();
