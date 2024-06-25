@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public UserResponse createUser(UserRequest userRequest) {
-		log.info("inside createUser for id : "+userRequest.getUserId());
+		log.info("inside createUser for id :{} : {} ",userRequest.getUserId(),userRequest);
 		
 		String userId = UUID.randomUUID().toString();
 		userRequest.setUserId(userId);
