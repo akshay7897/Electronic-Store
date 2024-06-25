@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
 import com.ap.entity.User;
+import com.ap.exception.UserNotFoudException;
 import com.ap.repository.UserRepositry;
 import com.ap.service.UserService;
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponse updateUser(UserRequest userRequest, String userId) {
 		User updatedUser =null;
-		User user = userRepositry.findById(userId).orElseThrow(()->new RuntimeException("User not found with given id ."));
+		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id ."));
 		
 		if(null!=userRequest.getName() && !" ".equals(userRequest.getName())) {
 			user.setName(userRequest.getName());
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Boolean deleteUser(String userId) {
-		User user = userRepositry.findById(userId).orElseThrow(()->new RuntimeException("User not found with given id ."));
+		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id ."));
 		userRepositry.delete(user);
 		return Boolean.TRUE;
 	}
@@ -97,13 +98,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse getUserByID(String userId) {
-		User user = userRepositry.findById(userId).orElseThrow(()->new RuntimeException("User not found with given id ."));
+		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id ."));
 		return getResponse(user);
 	}
 
 	@Override
 	public UserResponse getUserByEmail(String email) {
-		User user = userRepositry.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found with email id .."));
+		User user = userRepositry.findByEmail(email).orElseThrow(()-> new UserNotFoudException("User not found with email id .."));
 		return getResponse(user);
 	}
 

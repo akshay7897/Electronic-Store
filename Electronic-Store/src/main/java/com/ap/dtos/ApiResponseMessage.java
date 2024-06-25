@@ -1,9 +1,12 @@
 package com.ap.dtos;
 
+import org.springframework.http.HttpStatus;
+
 public class ApiResponseMessage {
 	
 	private String message;
 	private boolean success;
+	private HttpStatus status;
 	
 	public ApiResponseMessage() {
 		// 
@@ -13,6 +16,14 @@ public class ApiResponseMessage {
 		super();
 		this.message = message;
 		this.success = success;
+	}
+	
+
+	public ApiResponseMessage(String message, boolean success, HttpStatus status) {
+		super();
+		this.message = message;
+		this.success = success;
+		this.status = status;
 	}
 
 	public String getMessage() {
@@ -31,10 +42,23 @@ public class ApiResponseMessage {
 		this.success = success;
 	}
 
+	public HttpStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(HttpStatus status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "ApiResponseMessage [message=" + message + ", success=" + success + "]";
+		return "ApiResponseMessage [message=" + message + ", success=" + success + ", status=" + status + "]";
 	}
+	
+	
+	
+
+
 	
 	
 
