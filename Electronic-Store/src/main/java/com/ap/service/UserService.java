@@ -2,6 +2,7 @@ package com.ap.service;
 
 import java.util.List;
 
+import com.ap.dtos.PageableResponse;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
 
@@ -17,7 +18,7 @@ public interface UserService {
 	Boolean deleteUser(String userId);
 	
 	// get all users
-	List<UserResponse> getAllUsers();
+	PageableResponse<UserResponse> getAllUsers(int pageNumber,int pageSize,String sortBy,String sortdir);
 	
 	//get single user by id
 	UserResponse getUserByID(String userId);

@@ -7,8 +7,13 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ap.dtos.PageableResponse;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
 import com.ap.entity.User;
@@ -82,18 +87,30 @@ public class UserServiceImpl implements UserService {
 	public Boolean deleteUser(String userId) {
 		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id ."));
 		userRepositry.delete(user);
-		return Boolean.TRUE;
+		return true;
 	}
 
 	@Override
-	public List<UserResponse> getAllUsers() {
-		List<UserResponse> userResponseList=new ArrayList<UserResponse>();
-		List<User> usersList = userRepositry.findAll();
-		
-		for(User user:usersList) {
+	public PageableResponse<UserResponse> getAllUsers(int pageNumber,int pageSize,String sortBy,String sortdir) {
+		List<UserResponse> userResponseList = new ArrayList<>();
+		Sort sort = (sortdir.equalsIgnoreCase("asc")) ? (Sort.by(sortBy).ascending()) : (Sort.by(sortBy).descending());
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+		Page<User> userPage = userRepositry.findAll(pageable);
+		List<User> usersList = userPage.getContent();
+
+		for (User user : usersList) {
 			userResponseList.add(getResponse(user));
 		}
-		return userResponseList;
+		PageableResponse<UserResponse> response = new PageableResponse<>();
+		response.setContent(userResponseList);
+		response.setLastpage(userPage.isLast());
+		response.setPageNumber(userPage.getNumber());
+		response.setPageSize(userPage.getSize());
+		response.setTotalElements(userPage.getTotalElements());
+		response.setTotalPages(userPage.getTotalPages());
+
+		return response;
 	}
 
 	@Override

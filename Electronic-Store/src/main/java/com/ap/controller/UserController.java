@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ap.dtos.ApiResponseMessage;
+import com.ap.dtos.PageableResponse;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
 import com.ap.service.UserService;
@@ -66,9 +67,15 @@ public class UserController {
 	}
 	
 	@GetMapping("/getusers")
-	public ResponseEntity<List<UserResponse>> getUsers(){
+	public ResponseEntity<PageableResponse<UserResponse>> getUsers(
+			@RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+			@RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
+			@RequestParam(value = "sortBy",defaultValue = "name",required = false) String sortBy,
+			@RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortdir
+
+			){
 		
-		List<UserResponse> allUsers = userService.getAllUsers();
+		PageableResponse<UserResponse> allUsers = userService.getAllUsers(pageNumber,pageSize,sortBy,sortdir);
 		return new ResponseEntity<>(allUsers,HttpStatus.OK);
 	}
 	
