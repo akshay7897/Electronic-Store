@@ -11,7 +11,7 @@ public class CategoryNotFounException extends RuntimeException{
 	}
 	
 	public CategoryNotFounException(String message) {
-		super(message);
+		this.message=message;
 	}
 
 	public String getMessage() {
