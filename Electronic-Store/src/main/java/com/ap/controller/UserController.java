@@ -1,9 +1,15 @@
 package com.ap.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ap.dtos.ApiResponseMessage;
+import com.ap.dtos.ImageResponse;
 import com.ap.dtos.PageableResponse;
 import com.ap.dtos.UserRequest;
 import com.ap.dtos.UserResponse;
+import com.ap.service.FileService;
 import com.ap.service.UserService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,9 +37,15 @@ import jakarta.validation.Valid;
 public class UserController {
 	
 	private UserService userService;
+	
+	private FileService fileService;
+	
+	@Value("${user.profile.image.path}")
+	private String imageUploadPath;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService,FileService fileService) {
 		this.userService = userService;
+		this.fileService=fileService;
 	}
 	
 	// create
@@ -95,6 +111,41 @@ public class UserController {
 		return new ResponseEntity<>(userByEmail,HttpStatus.OK);
 	}
 	
+	@PostMapping("/image/{userId}")
+	public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile file,@PathVariable(name = "userId") String userId){
+		
+		String imageName = fileService.uploadFile(file, imageUploadPath);
+		
+		UserResponse userResponse = userService.getUserByID(userId);
+		userResponse.setUserImage(imageName);
+		UserRequest userRequest=new UserRequest();
+		BeanUtils.copyProperties(userResponse, userRequest);
+		userService.updateUser(userRequest, userId);
+		
+		ImageResponse response=new ImageResponse();
+		response.setImageName(imageName);
+		response.setSuccess(true);
+		response.setStatus(HttpStatus.CREATED);
+		return new ResponseEntity<>(response,HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/image/{userId}")
+	public void serveImage(@PathVariable("userId") String userId,HttpServletResponse response) {
+		
+		UserResponse userResponse = userService.getUserByID(userId);
+		
+		InputStream resource = fileService.getResource(imageUploadPath, userResponse.getUserImage());
+		
+		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		try {
+			StreamUtils.copy(resource, response.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 	
 

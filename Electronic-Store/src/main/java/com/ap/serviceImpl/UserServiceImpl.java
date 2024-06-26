@@ -1,5 +1,9 @@
 package com.ap.serviceImpl;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +11,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +30,9 @@ import com.ap.service.UserService;
 public class UserServiceImpl implements UserService {
 	
 	private UserRepositry userRepositry;
+	
+	@Value("${user.profile.image.path}")
+	private String imageUploadPath;
 	
 	public UserServiceImpl(UserRepositry userRepositry) {
 		super();
@@ -86,6 +94,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean deleteUser(String userId) {
 		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id ."));
+		
+		String userImageName = user.getUserImage();
+		String imagePath=imageUploadPath+File.separator+userImageName;
+		
+		try {
+			Path path=Paths.get(imagePath);
+			Files.delete(path);
+		} catch (Exception e) {
+			throw new RuntimeException("no such file found at location");
+		}
 		userRepositry.delete(user);
 		return true;
 	}
