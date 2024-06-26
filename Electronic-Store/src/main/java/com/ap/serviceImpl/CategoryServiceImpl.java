@@ -1,6 +1,7 @@
 package com.ap.serviceImpl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse createCategory(CategoryRequest request) {
+		String id = UUID.randomUUID().toString();
 		Category category = convertToEntity(request);
+		category.setCategoryId(id);
 		Category savedCategory = null;
 		try {
 		 savedCategory = categoryRepository.save(category);
