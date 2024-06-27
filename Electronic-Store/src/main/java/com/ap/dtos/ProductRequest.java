@@ -1,6 +1,7 @@
 package com.ap.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductRequest {
 	
@@ -10,10 +11,10 @@ private String productId;
 	private String title;
 	@NotBlank(message = "Descreption cant be null")
 	private String descreption;
-	@NotBlank(message = "Price cant be null")
+	@NotNull(message = "Price cant be null")
 	private Integer price;
 	private Integer discountedPrice;
-	@NotBlank(message = "Title cant be null")
+	@NotNull(message = "Title cant be null")
 	private Integer quantity;
 	private boolean live;
 	private boolean stock;
