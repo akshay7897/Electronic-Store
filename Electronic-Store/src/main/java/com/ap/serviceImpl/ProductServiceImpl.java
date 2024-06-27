@@ -1,9 +1,15 @@
 package com.ap.serviceImpl;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +28,9 @@ import com.ap.service.ProductService;
 public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
+	
+	@Value("${product.image.path}")
+	private String productImagePath;
 
 	public ProductServiceImpl(ProductRepository productRepository) {
 		super();
@@ -32,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
 	public ProductResponse createProduct(ProductRequest request) {
 		String id = UUID.randomUUID().toString();
 		request.setProductId(id);
+		request.setAddDate(new Date());
+		
 		Product savedProduct = null;
 		try {
 			savedProduct = productRepository.save(toEntity(request));
@@ -55,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setTitle(request.getTitle());
 		product.setLive(request.isLive());
 		product.setStock(request.isStock());
+		product.setAddDate(new Date());
 
 		Product updateProduct = null;
 		try {
@@ -112,13 +124,20 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public boolean deleteProduct(String productId) {
-		boolean existsById = productRepository.existsById(productId);
-		if (existsById) {
-			productRepository.deleteById(productId);
-			return true;
-		} else {
-			throw new ProductNotFountException("Product not found with given id...!");
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFountException("Product not found with given id...!"));
+
+		String productPath = productImagePath + File.separator + product.getProductImageName();
+		try {
+			Path path = Paths.get(productPath);
+			Files.delete(path);
+		} catch (Exception e) {
+			throw new RuntimeException("no such file found at location");
 		}
+		productRepository.delete(product);
+		
+		return true;
+		
 	}
 
 	@Override

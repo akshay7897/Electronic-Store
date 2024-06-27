@@ -1,5 +1,7 @@
 package com.ap.dtos;
 
+import java.util.Date;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,6 +20,8 @@ private String productId;
 	private Integer quantity;
 	private boolean live;
 	private boolean stock;
+	private Date addDate;
+	private String productImageName;
 	
 	public String getProductId() {
 		return productId;
@@ -67,11 +71,23 @@ private String productId;
 	public void setStock(boolean stock) {
 		this.stock = stock;
 	}
+	public Date getAddDate() {
+		return addDate;
+	}
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+	public String getProductImageName() {
+		return productImageName;
+	}
+	public void setProductImageName(String productImageName) {
+		this.productImageName = productImageName;
+	}
 	@Override
 	public String toString() {
 		return "ProductRequest [productId=" + productId + ", title=" + title + ", descreption=" + descreption
 				+ ", price=" + price + ", discountedPrice=" + discountedPrice + ", quantity=" + quantity + ", live="
-				+ live + ", stock=" + stock + "]";
+				+ live + ", stock=" + stock + ", addDate=" + addDate + ", productImageName=" + productImageName + "]";
 	}
 	
 	

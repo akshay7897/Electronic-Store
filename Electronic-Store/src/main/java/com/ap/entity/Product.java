@@ -1,5 +1,7 @@
 package com.ap.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -25,22 +27,10 @@ public class Product {
 	
 	private boolean stock;
 	
-	public Product() {
-		// 
-	}
-
-	public Product(String productId, String title, String descreption, Integer price, Integer discountedPrice,
-			Integer quantity, boolean live, boolean stock) {
-		super();
-		this.productId = productId;
-		this.title = title;
-		this.descreption = descreption;
-		this.price = price;
-		this.discountedPrice = discountedPrice;
-		this.quantity = quantity;
-		this.live = live;
-		this.stock = stock;
-	}
+	private Date addDate;
+	
+	private String productImageName;
+	
 
 	public String getProductId() {
 		return productId;
@@ -106,12 +96,30 @@ public class Product {
 		this.stock = stock;
 	}
 
+	public Date getAddDate() {
+		return addDate;
+	}
+
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+
+	public String getProductImageName() {
+		return productImageName;
+	}
+
+	public void setProductImageName(String productImageName) {
+		this.productImageName = productImageName;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", title=" + title + ", descreption=" + descreption + ", price="
 				+ price + ", discountedPrice=" + discountedPrice + ", quantity=" + quantity + ", live=" + live
-				+ ", stock=" + stock + "]";
+				+ ", stock=" + stock + ", addDate=" + addDate + ", productImageName=" + productImageName + "]";
 	}
+
+	
 	
 	
 	
