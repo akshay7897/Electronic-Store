@@ -29,6 +29,17 @@ public class GlobalExceptionHandler {
 	}
 	
 	
+	@ExceptionHandler(value = ProductNotFountException.class)
+	public ResponseEntity<ApiResponseMessage> productNotFountExceptionHandler(ProductNotFountException exception){
+		
+		ApiResponseMessage message=new ApiResponseMessage();
+		message.setMessage(exception.getMessage());
+		message.setSuccess(false);
+		message.setStatus(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
+		
+	}
+	
 	@ExceptionHandler(value = CategoryNotFounException.class)
 	public ResponseEntity<ApiResponseMessage> categoryNotFounExceptionHandler(CategoryNotFounException exception){
 		
