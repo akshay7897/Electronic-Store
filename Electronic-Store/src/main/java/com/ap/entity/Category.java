@@ -1,11 +1,21 @@
 package com.ap.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // bytebuddy.ByteBuddyInterceptor error avoiding
 public class Category {
 	
 	@Id
@@ -14,15 +24,12 @@ public class Category {
 	private String description;
 	private String coverImage;
 	
+	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch =FetchType.LAZY)
+	@JsonIgnore
+	private List<Product> products=new ArrayList<>();
+	
 	public Category() {
 		// 
-	}
-	public Category(String categoryId, String title, String description, String coverImage) {
-		super();
-		this.categoryId = categoryId;
-		this.title = title;
-		this.description = description;
-		this.coverImage = coverImage;
 	}
 
 	public String getCategoryId() {
@@ -49,13 +56,19 @@ public class Category {
 	public void setCoverImage(String coverImage) {
 		this.coverImage = coverImage;
 	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 	@Override
 	public String toString() {
 		return "Category [categoryId=" + categoryId + ", title=" + title + ", description=" + description
-				+ ", coverImage=" + coverImage + "]";
+				+ ", coverImage=" + coverImage + ", products=" + products + "]";
 	}
 	
-	
-	
-
 }

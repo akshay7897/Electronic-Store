@@ -2,6 +2,8 @@ package com.ap.dtos;
 
 import java.util.Date;
 
+import com.ap.entity.Category;
+
 public class ProductResponse {
 
 	private String productId;
@@ -15,6 +17,7 @@ public class ProductResponse {
 	private boolean stock;
 	private Date addDate;
 	private String productImageName;
+	private Category category;
 
 	public String getProductId() {
 		return productId;
@@ -96,12 +99,23 @@ public class ProductResponse {
 		this.productImageName = productImageName;
 	}
 
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductResponse [productId=" + productId + ", title=" + title + ", descreption=" + descreption
 				+ ", price=" + price + ", discountedPrice=" + discountedPrice + ", quantity=" + quantity + ", live="
-				+ live + ", stock=" + stock + ", addDate=" + addDate + ", productImageName=" + productImageName + "]";
+				+ live + ", stock=" + stock + ", addDate=" + addDate + ", productImageName=" + productImageName
+				+ ", category=" + category + "]";
 	}
+
+	
 
 	
 

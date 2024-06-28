@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 import com.ap.dtos.PageableResponse;
 import com.ap.dtos.ProductRequest;
 import com.ap.dtos.ProductResponse;
+import com.ap.entity.Category;
 import com.ap.entity.Product;
+import com.ap.exception.CategoryNotFounException;
 import com.ap.exception.ProductNotFountException;
+import com.ap.repository.CategoryRepository;
 import com.ap.repository.ProductRepository;
 import com.ap.service.ProductService;
 
@@ -29,12 +32,15 @@ public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
 	
+	private CategoryRepository categoryRepository;
+	
 	@Value("${product.image.path}")
 	private String productImagePath;
 
-	public ProductServiceImpl(ProductRepository productRepository) {
+	public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
 		super();
 		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
 	}
 
 	@Override
@@ -67,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setLive(request.isLive());
 		product.setStock(request.isStock());
 		product.setAddDate(new Date());
+		product.setProductImageName(request.getProductImageName());
 
 		Product updateProduct = null;
 		try {
@@ -158,7 +165,35 @@ public class ProductServiceImpl implements ProductService {
 
 		return pageableResponse;
 	}
+	
+	
+	
+	
+	@Override
+	public ProductResponse createProductWithCategory(ProductRequest request, String categoryId) {
+		String id = UUID.randomUUID().toString();
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new CategoryNotFounException("Category not available with given id"));
+		Product product = toEntity(request);
+		product.setCategory(category);
+		product.setProductId(id);
+		
+		Product updatedProduct = productRepository.save(product);
+		return toResponse(updatedProduct);
+	}
 
+	@Override
+	public ProductResponse updateProductwithCategoryId(String categoryId, String productId) {
+		
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new CategoryNotFounException("Category not available with given id"));
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFountException("Product not found with given id...!"));
+		product.setCategory(category);
+		Product updatedProduct = productRepository.save(product);
+		return toResponse(updatedProduct);
+	}
+	
 	private Product toEntity(ProductRequest request) {
 		Product product = new Product();
 		BeanUtils.copyProperties(request, product);
@@ -170,5 +205,7 @@ public class ProductServiceImpl implements ProductService {
 		BeanUtils.copyProperties(product, response);
 		return response;
 	}
+
+
 
 }

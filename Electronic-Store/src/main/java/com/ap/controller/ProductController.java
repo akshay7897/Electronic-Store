@@ -126,10 +126,10 @@ public class ProductController {
 		
 		ProductRequest request=new ProductRequest();
 		BeanUtils.copyProperties(product, request);
-		productService.updateProduct(request, productId);
+		ProductResponse productResponse = productService.updateProduct(request, productId);
 		
 		ImageResponse response=new ImageResponse();
-		response.setImageName(imageName);
+		response.setImageName(productResponse.getProductImageName());
 		response.setSuccess(true);
 		response.setStatus(HttpStatus.CREATED);
 		return new ResponseEntity<>(response,HttpStatus.CREATED);

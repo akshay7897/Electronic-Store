@@ -24,5 +24,10 @@ public interface ProductService {
 			String sortdir,String subTitle);
 	
 	
+	ProductResponse createProductWithCategory(ProductRequest request,String categoryId);
+	
+	
+	ProductResponse updateProductwithCategoryId(String categoryId,String productId);
+	
 
 }

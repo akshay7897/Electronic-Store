@@ -16,18 +16,25 @@ import com.ap.dtos.ApiResponseMessage;
 import com.ap.dtos.CategoryRequest;
 import com.ap.dtos.CategoryResponse;
 import com.ap.dtos.PageableResponse;
+import com.ap.dtos.ProductRequest;
+import com.ap.dtos.ProductResponse;
 import com.ap.service.CategoryService;
+import com.ap.service.ProductService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 	
 	private CategoryService categoryService;
-	public CategoryController(CategoryService categoryService) {
+	
+	private ProductService productService;
+	
+	public CategoryController(CategoryService categoryService, ProductService productService) {
 		super();
 		this.categoryService = categoryService;
+		this.productService = productService;
 	}
 	
 	@PostMapping("/create")
@@ -75,6 +82,29 @@ public class CategoryController {
 		CategoryResponse categoryById = categoryService.getCategoryById(categoryId);
 		return new ResponseEntity<>(categoryById, HttpStatus.OK);
 		
+	}
+	
+	
+	//create product with categoryId
+	@PostMapping("/{categoryId}/product")
+	public ResponseEntity<ProductResponse> createProductWithCategory(@Valid @RequestBody ProductRequest request,
+			@PathVariable String categoryId) {
+		
+		ProductResponse productResponse = productService.createProductWithCategory(request, categoryId);
+		
+		return new ResponseEntity<>(productResponse, HttpStatus.CREATED);
+
+	}
+	
+	
+	@PutMapping("/{categoryId}/product/{productId}")
+	public ResponseEntity<ProductResponse> updateProductWithCategoryId(
+			@PathVariable String categoryId,@PathVariable String productId) {
+		
+		ProductResponse productResponse = productService.updateProductwithCategoryId(categoryId, productId);
+		
+		return new ResponseEntity<>(productResponse, HttpStatus.OK);
+
 	}
 	
 
