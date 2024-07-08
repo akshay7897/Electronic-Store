@@ -15,8 +15,10 @@ import com.ap.entity.Cart;
 import com.ap.entity.CartItems;
 import com.ap.entity.Product;
 import com.ap.entity.User;
+import com.ap.exception.CartNotFoundException;
 import com.ap.exception.ProductNotFountException;
 import com.ap.exception.UserNotFoudException;
+import com.ap.repository.CartItemsRepository;
 import com.ap.repository.CartRepository;
 import com.ap.repository.ProductRepository;
 import com.ap.repository.UserRepositry;
@@ -29,13 +31,15 @@ public class CartServiceImpl implements CartService {
 	private UserRepositry userRepositry;
 	private CartRepository cartRepository;
 	private ProductRepository productRepository;
+	private CartItemsRepository cartItemsRepository;
 	
 	public CartServiceImpl(UserRepositry userRepositry, CartRepository cartRepository,
-			ProductRepository productRepository) {
+			ProductRepository productRepository,CartItemsRepository cartItemsRepository) {
 		super();
 		this.userRepositry = userRepositry;
 		this.cartRepository = cartRepository;
 		this.productRepository = productRepository;
+		this.cartItemsRepository=cartItemsRepository;
 	}
 
 	@Override
@@ -43,6 +47,10 @@ public class CartServiceImpl implements CartService {
 		
 		Integer quantity = request.getQuantity();
 		Integer productId = request.getProductId();
+		
+		if(quantity<=0) {
+			throw new RuntimeException("Requested Quantity Is Not Valid..!!");
+		}
 		
 		Product product = productRepository.findById(String.valueOf(productId)).orElseThrow(()-> new ProductNotFountException("product not found with given id"));
 		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id"));
@@ -90,20 +98,36 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void removeItemFromCart(String userId, Integer cartItem) {
-		
+	public void removeItemFromCart(String userId, Integer cartItemId) {
+		CartItems cartItems = cartItemsRepository.findById(cartItemId).orElseThrow(()->new RuntimeException("Cart item not found"));
+		cartItemsRepository.delete(cartItems);
 	}
 
 	@Override
 	public void clearCart(String userId) {
 		
+		User user = userRepositry.findById(userId)
+				.orElseThrow(() -> new UserNotFoudException("User not found with given id"));
+		Cart cart = cartRepository.findByUser(user)
+				.orElseThrow(() -> new CartNotFoundException("Cart not found for this user"));
+		cart.getCartItems().clear();
+
+		cartRepository.save(cart);
 	}
 	
-	
+	@Override
+	public CartDto getCartByUser(String userId) {
+		
+		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id"));
+		Cart cart=cartRepository.findByUser(user).orElseThrow(()->new CartNotFoundException("Cart not found for this user"));
+		return cartToDto(cart);
+	}
+
 	private CartDto cartToDto(Cart cart) {
 		CartDto cartDto=new CartDto();
 		BeanUtils.copyProperties(cart, cartDto);
 		return cartDto;
 	}
 
+	
 }
