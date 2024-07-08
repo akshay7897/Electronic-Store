@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ap.entity.CartItems;
 import com.ap.entity.User;
 
 public class CartDto {
@@ -11,7 +12,7 @@ public class CartDto {
 	private String cartId;
 	private Date createdDate;
 	private User user;
-	private List<CartItemsDto> cartItems=new ArrayList<>();
+	private List<CartItems> cartItems=new ArrayList<>();
 
 	public String getCartId() {
 		return cartId;
@@ -29,11 +30,12 @@ public class CartDto {
 		this.user = user;
 	}
 
-	public List<CartItemsDto> getCartItems() {
+
+	public List<CartItems> getCartItems() {
 		return cartItems;
 	}
 
-	public void setCartItems(List<CartItemsDto> cartItems) {
+	public void setCartItems(List<CartItems> cartItems) {
 		this.cartItems = cartItems;
 	}
 
@@ -50,6 +52,8 @@ public class CartDto {
 		return "CartDto [cartId=" + cartId + ", createdDate=" + createdDate + ", user=" + user + ", cartItems="
 				+ cartItems + "]";
 	}
+
+	
 	
 
 }

@@ -30,7 +30,7 @@ public class CartController {
 	public ResponseEntity<CartDto> addItemToCart(@RequestBody AddItemsToCartRequest request,@PathVariable String userId){
 		
 		CartDto addedCartItems = cartService.addItemToCart(userId, request);
-		return new ResponseEntity<>(addedCartItems,HttpStatus.CREATED);
+		return new ResponseEntity<>(addedCartItems,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/user/{userId}/cart/{cartItemId}")

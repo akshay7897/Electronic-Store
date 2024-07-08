@@ -2,13 +2,13 @@ package com.ap.dtos;
 
 public class AddItemsToCartRequest {
 	
-	private Integer productId;
+	private String productId;
 	private Integer quantity;
 	
-	public Integer getProductId() {
+	public String getProductId() {
 		return productId;
 	}
-	public void setProductId(Integer productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 	public Integer getQuantity() {

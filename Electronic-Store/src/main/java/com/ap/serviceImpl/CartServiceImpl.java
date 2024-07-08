@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,13 @@ public class CartServiceImpl implements CartService {
 	public CartDto addItemToCart(String userId, AddItemsToCartRequest request) {
 		
 		Integer quantity = request.getQuantity();
-		Integer productId = request.getProductId();
+		String productId = request.getProductId();
 		
 		if(quantity<=0) {
 			throw new RuntimeException("Requested Quantity Is Not Valid..!!");
 		}
 		
-		Product product = productRepository.findById(String.valueOf(productId)).orElseThrow(()-> new ProductNotFountException("product not found with given id"));
+		Product product = productRepository.findById(productId).orElseThrow(()-> new ProductNotFountException("product not found with given id"));
 		User user = userRepositry.findById(userId).orElseThrow(()->new UserNotFoudException("User not found with given id"));
 		
 		Cart cart=null;
@@ -73,14 +74,14 @@ public class CartServiceImpl implements CartService {
 		
 		List<CartItems> updatedItems = items.stream().map(item -> {
 
-			if (item.getProduct().getProductId().equalsIgnoreCase(String.valueOf(productId))) {
+			if (item.getProduct().getProductId().equalsIgnoreCase(productId)) {
 				item.setQuantity(quantity);
 				item.setTotalPrize(quantity * product.getPrice());
 				isUpdated.set(true);
 			}
 			return item;
 
-		}).toList();
+		}).collect(Collectors.toList());
 		
 		cart.setCartItems(updatedItems);
 		
@@ -90,7 +91,7 @@ public class CartServiceImpl implements CartService {
 		cartItems.setTotalPrize(quantity*product.getPrice());
 		cartItems.setProduct(product);
 		cartItems.setCart(cart);
-		items.add(cartItems);
+		cart.getCartItems().add(cartItems);
 		}
 		
 		Cart savedCart = cartRepository.save(cart);
