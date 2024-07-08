@@ -29,5 +29,10 @@ public interface ProductService {
 	
 	ProductResponse updateProductwithCategoryId(String categoryId,String productId);
 	
+	
+	
+	PageableResponse<ProductResponse> getProductByCategory(int pageNumber, int pageSize,
+			String sortBy, String sortdir,String categoryId);
+	
 
 }

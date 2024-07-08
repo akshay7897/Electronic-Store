@@ -194,6 +194,32 @@ public class ProductServiceImpl implements ProductService {
 		return toResponse(updatedProduct);
 	}
 	
+	
+	@Override
+	public PageableResponse<ProductResponse> getProductByCategory(int pageNumber, int pageSize,
+			String sortBy, String sortdir,String categoryId) {
+		
+		Sort sort=(sortBy.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+		Pageable pageable=PageRequest.of(pageNumber, pageSize, sort);
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new CategoryNotFounException("Category not available with given id"));
+		
+		Page<Product> page = productRepository.findByCategory(category,pageable);
+		List<Product> products = page.getContent();
+		
+		PageableResponse<ProductResponse> pageableResponse=new PageableResponse<>();
+		pageableResponse.setContent(products.stream().map(product->toResponse(product)).toList());
+		pageableResponse.setLastpage(page.isLast());
+		pageableResponse.setPageNumber(page.getNumber());
+		pageableResponse.setPageSize(page.getSize());
+		pageableResponse.setTotalElements(page.getTotalElements());
+		pageableResponse.setTotalPages(page.getTotalPages());
+		
+		return pageableResponse;
+	}
+	
+	
+	
 	private Product toEntity(ProductRequest request) {
 		Product product = new Product();
 		BeanUtils.copyProperties(request, product);
@@ -205,6 +231,8 @@ public class ProductServiceImpl implements ProductService {
 		BeanUtils.copyProperties(product, response);
 		return response;
 	}
+
+	
 
 
 
