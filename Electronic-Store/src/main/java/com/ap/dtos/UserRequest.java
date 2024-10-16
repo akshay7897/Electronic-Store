@@ -1,13 +1,30 @@
 package com.ap.dtos;
 
+import com.ap.validate.ImageNameValid;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class UserRequest {
 	
 	private String userId;
+	@NotBlank(message = "Name Should not be null")
 	private String name;
+	
+	@NotBlank(message = "Email should be unique or not null")
+	@Pattern(regexp = "^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$" ,message = "Invalid Email")
 	private String email;
+	
+	@NotBlank(message = "Password should not be null")
 	private String password;
+	
+	@NotBlank(message = "Gender should not null")
 	private String gender;
+	
+	@NotBlank(message = "About should not null")
 	private String about;
+	
+	@ImageNameValid(message = "Image name should not be null")
 	private String userImage;
 	
 	public UserRequest() {
