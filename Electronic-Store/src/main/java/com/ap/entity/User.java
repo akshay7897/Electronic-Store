@@ -1,8 +1,14 @@
 package com.ap.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -31,9 +37,9 @@ public class User {
 	
 	private String userImage;
 	
-	public User() {
-		// 
-	}
+	@OneToMany(mappedBy = "userId",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+	private List<Order> order=new ArrayList<>();
+	
 
 	public String getUserId() {
 		return userId;
@@ -90,12 +96,23 @@ public class User {
 	public void setUserImage(String userImage) {
 		this.userImage = userImage;
 	}
+	
+
+	public List<Order> getOrder() {
+		return order;
+	}
+
+	public void setOrder(List<Order> order) {
+		this.order = order;
+	}
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password + ", gender="
-				+ gender + ", about=" + about + ", userImage=" + userImage + "]";
+				+ gender + ", about=" + about + ", userImage=" + userImage + ", order=" + order + "]";
 	}
+
+	
 
 	
 	
