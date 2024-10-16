@@ -112,15 +112,7 @@ public class User {
 				+ gender + ", about=" + about + ", userImage=" + userImage + ", order=" + order + "]";
 	}
 
-	
 
-	
-	
-	
-	
-	//
-	
-	
 	
 	
 	
